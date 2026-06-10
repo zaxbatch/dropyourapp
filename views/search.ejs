@@ -1,0 +1,97 @@
+<!-- views/search.ejs -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Search Results - Drop Your App</title>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 0;
+            padding: 20px;
+        }
+        .search-container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        .search-header {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 30px;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        .result-card {
+            background: white;
+            border-radius: 20px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s;
+        }
+        .result-card:hover {
+            transform: scale(1.02);
+            background: #f9f9f9;
+        }
+        .result-info h3 {
+            color: #667eea;
+            margin-bottom: 0.3rem;
+        }
+        .vote-count {
+            background: #ff6b6b;
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+        }
+        .btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            text-decoration: none;
+            padding: 0.4rem 1rem;
+            border-radius: 40px;
+        }
+        .no-results {
+            background: white;
+            padding: 3rem;
+            text-align: center;
+            border-radius: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="search-container">
+        <div class="search-header">
+            <h1>🔍 Search Results for "<%= searchTerm %>"</h1>
+            <form action="/apps/search" method="GET">
+                <input type="text" name="q" value="<%= searchTerm %>" placeholder="Search again..." style="padding: 0.5rem; width: 60%; border-radius: 40px; border: 2px solid #ddd;">
+                <button type="submit" style="background: #667eea; padding: 0.5rem 1rem;">Search</button>
+            </form>
+        </div>
+        
+        <% if (apps.length === 0) { %>
+            <div class="no-results">
+                <p>😭 No apps found for "<%= searchTerm %>"</p>
+                <p>Try a different search term or <a href="/">browse all apps</a></p>
+            </div>
+        <% } else { %>
+            <% apps.forEach(app => { %>
+                <div class="result-card">
+                    <div class="result-info">
+                        <h3><%= app.title %></h3>
+                        <p>by <%= app.username %> • <%= app.description %></p>
+                    </div>
+                    <div style="display: flex; gap: 1rem; align-items: center;">
+                        <span class="vote-count">👍 <%= app.votes || 0 %></span>
+                        <a href="/apps/<%= app.id %>" class="btn">View</a>
+                    </div>
+                </div>
+            <% }) %>
+        <% } %>
+        
+        <a href="/" style="display: inline-block; margin-top: 1rem; color: white;">← Back to Home</a>
+    </div>
+</body>
+</html>

@@ -1,0 +1,101 @@
+<!-- views/feed.ejs -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Following Feed - Drop Your App</title>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 0;
+            padding: 20px;
+        }
+        .feed-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .feed-header {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 30px;
+            text-align: center;
+            margin-bottom: 2rem;
+            transform: rotate(-0.5deg);
+        }
+        .app-post {
+            background: white;
+            border-radius: 25px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            transition: transform 0.2s;
+        }
+        .app-post:hover {
+            transform: translateX(10px);
+        }
+        .post-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        .username {
+            color: #667eea;
+            font-weight: bold;
+        }
+        .vote-badge {
+            background: #ff6b6b;
+            color: white;
+            padding: 0.2rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+        }
+        .btn {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 40px;
+            margin-top: 0.5rem;
+        }
+        .empty-feed {
+            background: white;
+            padding: 3rem;
+            text-align: center;
+            border-radius: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="feed-container">
+        <div class="feed-header">
+            <h1>🔥 Your Following Feed</h1>
+            <p>Apps from developers you follow</p>
+        </div>
+        
+        <% if (apps.length === 0) { %>
+            <div class="empty-feed">
+                <p>😢 No apps from followed users yet!</p>
+                <p>Go find some cool developers to follow on their profiles.</p>
+                <a href="/" class="btn">Explore Apps →</a>
+            </div>
+        <% } else { %>
+            <% apps.forEach(app => { %>
+                <div class="app-post">
+                    <div class="post-header">
+                        <span class="username">👤 <%= app.username %></span>
+                        <span class="vote-badge">👍 <%= app.votes || 0 %></span>
+                    </div>
+                    <h3><%= app.title %></h3>
+                    <p><%= app.description %></p>
+                    <a href="/apps/<%= app.id %>" class="btn">View App →</a>
+                </div>
+            <% }) %>
+        <% } %>
+        
+        <a href="/" style="display: inline-block; margin-top: 1rem; color: white;">← Back to Home</a>
+    </div>
+</body>
+</html>

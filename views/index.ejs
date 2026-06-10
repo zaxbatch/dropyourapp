@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Drop Your App 🚀 Funky Fresh App Community</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #1a1a2e;
+            min-height: 100vh;
+        }
+
+        /* Funky glassmorphism navbar */
+        .navbar {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 3px solid #ff6b6b;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: -0.5px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #1a1a2e;
+            font-weight: 600;
+            transition: transform 0.2s;
+        }
+
+        .nav-links a:hover {
+            transform: translateY(-2px);
+            color: #667eea;
+        }
+
+        /* Hero section */
+        .hero {
+            background: linear-gradient(120deg, #f093fb 0%, #f5576c 100%);
+            padding: 4rem 2rem;
+            text-align: center;
+            clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
+            margin-bottom: 2rem;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            color: white;
+            text-shadow: 4px 4px 0 rgba(0, 0, 0, 0.2);
+            margin-bottom: 1rem;
+            animation: bounce 1s ease;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        /* Cards grid */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .featured-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .feature-card {
+            background: white;
+            border-radius: 20px;
+            padding: 1.5rem;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 2px solid transparent;
+            text-align: center;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px) rotate(1deg);
+            border-color: #ff6b6b;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .feature-card h3 {
+            color: #667eea;
+            margin-bottom: 0.5rem;
+        }
+
+        .apps-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .app-card {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .app-card:hover {
+            transform: scale(1.03);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .app-content {
+            padding: 1rem;
+        }
+
+        .app-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: #667eea;
+        }
+
+        .vote-badge {
+            background: #ff6b6b;
+            color: white;
+            padding: 0.2rem 0.5rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            display: inline-block;
+            margin-top: 0.5rem;
+        }
+
+        button, .btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 40px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: transform 0.2s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        button:hover, .btn:hover {
+            transform: scale(1.05);
+        }
+
+        .search-form {
+            display: inline-flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .search-input {
+            padding: 0.4rem 1rem;
+            border-radius: 40px;
+            border: 2px solid #ddd;
+            font-size: 0.9rem;
+        }
+
+        .upload-form {
+            margin-top: 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1rem;
+            align-items: center;
+            background: rgba(255,255,255,0.2);
+            padding: 1.5rem;
+            border-radius: 60px;
+            backdrop-filter: blur(10px);
+        }
+
+        .upload-form input, .upload-form button {
+            margin: 0;
+        }
+
+        .upload-form input[type="text"] {
+            padding: 0.5rem 1rem;
+            border-radius: 40px;
+            border: none;
+            width: 200px;
+        }
+
+        .upload-form input[type="file"] {
+            background: white;
+            padding: 0.5rem;
+            border-radius: 40px;
+            border: none;
+        }
+
+        .tip {
+            color: white;
+            font-size: 0.8rem;
+            margin-top: 0.5rem;
+            opacity: 0.9;
+        }
+
+        h2 {
+            color: white;
+            margin-top: 2rem;
+            font-size: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2rem; }
+            .navbar { flex-direction: column; text-align: center; }
+            .nav-links { justify-content: center; }
+            .upload-form { flex-direction: column; border-radius: 30px; }
+            .upload-form input[type="text"] { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">🍄 Drop Your App</div>
+        <div class="nav-links">
+            <a href="/">Home</a>
+            <a href="/social/feed">Following Feed</a>
+            <% if (user) { %>
+                <a href="/users/profile/<%= user.id %>">My Profile</a>
+            <% } else { %>
+                <a href="/auth/login">My Profile</a>
+            <% } %>
+            <form action="/apps/search" method="GET" class="search-form">
+                <input type="text" name="q" placeholder="Search apps..." class="search-input">
+                <button type="submit">🔍</button>
+            </form>
+            <% if (user) { %>
+                <span>👋 <%= user.username %></span>
+                <a href="/auth/logout">Logout</a>
+            <% } else { %>
+                <a href="/auth/login">Login</a>
+                <a href="/auth/register">Sign Up</a>
+            <% } %>
+        </div>
+    </nav>
+
+    <div class="hero">
+        <h1>✨ Drop Your Web App Here ✨</h1>
+        <p style="font-size: 1.2rem; color: white; margin-top: 1rem;">Share your creations, find inspiration, grow together</p>
+        <% if (user) { %>
+            <form action="/apps/upload" method="POST" enctype="multipart/form-data" class="upload-form" id="uploadForm">
+                <input type="text" name="title" placeholder="App name" required>
+                <input type="text" name="description" placeholder="Brief description">
+                <input type="file" name="files" webkitdirectory directory multiple required>
+                <button type="submit">🚀 Drop Your App!</button>
+            </form>
+            <div class="tip">
+                💡 Tip: Select your entire app folder (must contain index.html)
+            </div>
+        <% } else { %>
+            <div style="margin-top: 1rem;">
+                <a href="/auth/login" style="background: white; color: #667eea; padding: 0.5rem 1.5rem; border-radius: 40px; text-decoration: none; font-weight: bold; display: inline-block;">Login to Drop Apps →</a>
+            </div>
+        <% } %>
+    </div>
+
+    <div class="container">
+        <div class="featured-section">
+            <div class="feature-card">
+                <div class="feature-icon">🏆</div>
+                <h3>App of the Day</h3>
+                <% if (appOfDay && appOfDay.item_id) { %>
+                    <% 
+                        // Fetch app details if available
+                        const appId = appOfDay.item_id;
+                    %>
+                    <p>Check out today's featured app!</p>
+                    <a href="/apps/<%= appId %>" class="btn" style="margin-top: 0.5rem;">View Winner 🏆</a>
+                <% } else { %>
+                    <p>No app featured yet</p>
+                    <p style="font-size: 0.8rem; color: #999;">Be the first!</p>
+                <% } %>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">⭐</div>
+                <h3>Developer of the Day</h3>
+                <% if (devOfDay && devOfDay.item_id) { %>
+                    <% 
+                        const devId = devOfDay.item_id;
+                    %>
+                    <p>Today's standout developer!</p>
+                    <a href="/users/profile/<%= devId %>" class="btn" style="margin-top: 0.5rem;">View Profile ⭐</a>
+                <% } else { %>
+                    <p>No dev featured yet</p>
+                    <p style="font-size: 0.8rem; color: #999;">Could be you!</p>
+                <% } %>
+            </div>
+        </div>
+
+        <h2>🔥 Latest Drops</h2>
+        <div class="apps-grid">
+            <% if (recentApps && recentApps.length > 0) { %>
+                <% recentApps.forEach(app => { %>
+                    <div class="app-card">
+                        <div class="app-content">
+                            <div class="app-title"><%= app.title %></div>
+                            <p style="margin: 0.5rem 0; color: #666; font-size: 0.9rem;"><%= app.description || "No description yet" %></p>
+                            <div class="vote-badge">👍 <%= app.vote_count || 0 %> votes</div>
+                            <p style="margin-top: 0.5rem; font-size: 0.8rem; color: #999;">by <%= app.username %></p>
+                            <a href="/apps/<%= app.id %>" class="btn" style="display: inline-block; margin-top: 0.5rem;">View App →</a>
+                        </div>
+                    </div>
+                <% }) %>
+            <% } else { %>
+                <div style="background: white; padding: 2rem; border-radius: 20px; text-align: center; grid-column: 1/-1;">
+                    <p style="font-size: 1.2rem;">😢 No apps dropped yet!</p>
+                    <% if (user) { %>
+                        <p style="margin-top: 0.5rem;">Be the first to drop your awesome app above ↑</p>
+                    <% } else { %>
+                        <p style="margin-top: 0.5rem;"><a href="/auth/register" style="color: #667eea; font-weight: bold;">Sign up</a> to drop the first app!</p>
+                    <% } %>
+                </div>
+            <% } %>
+        </div>
+    </div>
+
+    <script>
+        // Add some fun console message
+        console.log("%c✨ Welcome to Drop Your App! ✨", "color: #f5576c; font-size: 16px; font-weight: bold;");
+        console.log("%cShare your web apps with the world!", "color: #667eea; font-size: 14px;");
+        
+        // Add form validation
+        const uploadForm = document.getElementById('uploadForm');
+        if (uploadForm) {
+            uploadForm.addEventListener('submit', function(e) {
+                const fileInput = this.querySelector('input[type="file"]');
+                if (fileInput.files.length === 0) {
+                    e.preventDefault();
+                    alert('Please select a folder containing your web app!');
+                } else {
+                    const hasHtml = Array.from(fileInput.files).some(file => 
+                        file.name.toLowerCase() === 'index.html' || 
+                        file.name.toLowerCase().endsWith('.html')
+                    );
+                    if (!hasHtml) {
+                        if (!confirm('⚠️ No HTML files found in the selected folder. Your app might not display correctly. Continue anyway?')) {
+                            e.preventDefault();
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>

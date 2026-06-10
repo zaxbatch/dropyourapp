@@ -1,0 +1,311 @@
+<!-- views/app.ejs - Complete fixed version -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title><%= app.title %> - Drop Your App</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .app-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 30px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+        }
+
+        .app-header {
+            background: linear-gradient(135deg, #f093fb, #f5576c);
+            padding: 2rem;
+            color: white;
+        }
+
+        .app-header h1 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .app-preview {
+            background: #f5f5f5;
+            padding: 2rem;
+            text-align: center;
+            border-bottom: 3px dashed #ddd;
+        }
+
+        .preview-frame {
+            width: 100%;
+            height: 600px;
+            border: none;
+            border-radius: 20px;
+            background: white;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .preview-error {
+            background: #fff3cd;
+            border: 2px dashed #ffc107;
+            border-radius: 20px;
+            padding: 3rem;
+            text-align: center;
+        }
+
+        .preview-error h3 {
+            color: #856404;
+            margin-bottom: 1rem;
+        }
+
+        .preview-error p {
+            color: #856404;
+        }
+
+        .app-info {
+            padding: 2rem;
+        }
+
+        .vote-section {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin: 1.5rem 0;
+            padding: 1rem;
+            background: #f9f9f9;
+            border-radius: 20px;
+        }
+
+        .vote-btn {
+            background: #ff6b6b;
+            padding: 0.7rem 1.5rem;
+            font-size: 1.1rem;
+            border: none;
+            border-radius: 40px;
+            cursor: pointer;
+            transition: transform 0.2s;
+            color: white;
+            font-weight: bold;
+        }
+
+        .vote-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .vote-count {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .comments-section {
+            background: #f9f9f9;
+            padding: 2rem;
+            border-radius: 20px;
+            margin-top: 1rem;
+        }
+
+        .comment {
+            background: white;
+            padding: 1rem;
+            margin: 0.5rem 0;
+            border-radius: 15px;
+            border-left: 4px solid #f5576c;
+        }
+
+        .comment strong {
+            color: #667eea;
+        }
+
+        .comment small {
+            color: #999;
+            font-size: 0.8rem;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 0.8rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 15px;
+            font-family: inherit;
+            font-size: 1rem;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        button {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 0.7rem 1.5rem;
+            border-radius: 40px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 0.5rem;
+            transition: transform 0.2s;
+        }
+
+        button:hover {
+            transform: scale(1.05);
+        }
+
+        .back-btn {
+            display: inline-block;
+            margin-top: 1rem;
+            color: white;
+            text-decoration: none;
+            background: rgba(255,255,255,0.2);
+            padding: 0.5rem 1rem;
+            border-radius: 40px;
+            transition: background 0.2s;
+        }
+
+        .back-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        .delete-btn {
+            background: #dc3545;
+            margin-left: 1rem;
+        }
+
+        .delete-btn:hover {
+            background: #c82333;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <div class="app-header">
+            <h1>🚀 <%= app.title %></h1>
+            <p>by <strong><%= app.username %></strong></p>
+            <p style="font-size: 0.9rem; opacity: 0.9;">📅 <%= new Date(app.created_at).toLocaleDateString() %></p>
+        </div>
+        
+        <div class="app-preview">
+            <h3>📱 Live Preview</h3>
+            <div id="previewContainer">
+                <!-- Preview will be loaded here via JavaScript -->
+                <div class="preview-error" id="loadingPreview">
+                    <h3>🔄 Loading your app...</h3>
+                </div>
+            </div>
+        </div>
+        
+        <div class="app-info">
+            <p style="font-size: 1.1rem; line-height: 1.6;"><%= app.description || "No description provided — but it's probably awesome!" %></p>
+            
+            <div class="vote-section">
+                <button class="vote-btn" onclick="vote(1)">👍 Upvote</button>
+                <button class="vote-btn" onclick="vote(-1)">👎 Downvote</button>
+                <span class="vote-count" id="voteCount">⭐ <%= app.votes || 0 %> points</span>
+            </div>
+            
+            <% if (user && user.id === app.user_id) { %>
+                <form action="/apps/delete/<%= app.id %>" method="POST" onsubmit="return confirm('⚠️ Delete this app permanently?');" style="display: inline;">
+                    <button type="submit" class="delete-btn">🗑️ Delete App</button>
+                </form>
+            <% } %>
+            
+            <div class="comments-section">
+                <h3>💬 Comments (<%= comments.length %>)</h3>
+                <% if (user) { %>
+                    <form action="/apps/comment/<%= app.id %>" method="POST" style="margin: 1rem 0;">
+                        <textarea name="content" rows="3" placeholder="Share your thoughts... (max 500 chars)" maxlength="500"></textarea>
+                        <button type="submit">💬 Post Comment</button>
+                    </form>
+                <% } else { %>
+                    <p style="margin: 1rem 0;"><a href="/auth/login" style="color: #667eea;">Login</a> to join the conversation!</p>
+                <% } %>
+                
+                <div style="margin-top: 1.5rem;">
+                    <% if (comments && comments.length > 0) { %>
+                        <% comments.forEach(comment => { %>
+                            <div class="comment">
+                                <strong>👤 <%= comment.username %></strong>
+                                <p style="margin: 0.5rem 0;"><%= comment.content %></p>
+                                <small>📅 <%= new Date(comment.created_at).toLocaleString() %></small>
+                            </div>
+                        <% }) %>
+                    <% } else { %>
+                        <div style="background: white; padding: 2rem; text-align: center; border-radius: 15px;">
+                            <p>💭 No comments yet. Be the first to share your thoughts!</p>
+                        </div>
+                    <% } %>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div style="text-align: center; margin-top: 1rem;">
+        <a href="/" class="back-btn">← Back to Home</a>
+        <a href="/users/profile/<%= app.user_id %>" class="back-btn">👤 View Developer Profile</a>
+    </div>
+
+    <script>
+        // Try to load the app preview
+        const previewContainer = document.getElementById('previewContainer');
+        const appPath = '/<%= app.folder_path %>';
+        
+        // Try to load index.html
+        fetch(appPath + '/index.html')
+            .then(response => {
+                if (response.ok) {
+                    // If index.html exists, load it in an iframe
+                    previewContainer.innerHTML = `<iframe src="${appPath}/index.html" class="preview-frame" sandbox="allow-same-origin allow-scripts allow-popups allow-forms"></iframe>`;
+                } else {
+                    // Try to find any HTML file
+                    throw new Error('index.html not found');
+                }
+            })
+            .catch(error => {
+                // Show helpful error message
+                previewContainer.innerHTML = `
+                    <div class="preview-error">
+                        <h3>⚠️ Preview Unavailable</h3>
+                        <p>Your app folder doesn't contain an <strong>index.html</strong> file.</p>
+                        <p style="margin-top: 1rem;">📁 Files in your app folder:</p>
+                        <p style="font-family: monospace; margin-top: 0.5rem;">Check that you uploaded the correct folder with an index.html file.</p>
+                    </div>
+                `;
+            });
+        
+        function vote(value) {
+            fetch('/apps/vote/<%= app.id %>', {
+                method: 'POST',
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({ value: value })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    location.reload();
+                } else if (data.error === 'Login required') {
+                    alert('Please login to vote!');
+                    window.location.href = '/auth/login';
+                } else {
+                    alert('Error voting. Please try again.');
+                }
+            })
+            .catch(err => {
+                console.error('Vote error:', err);
+                alert('Error voting. Please try again.');
+            });
+        }
+    </script>
+</body>
+</html>
