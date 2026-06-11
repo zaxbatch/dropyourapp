@@ -1,0 +1,465 @@
+<html>
+  <head>
+    <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="./style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js" ></script>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
+    <title>Z-Dot LLC</title>
+    <meta content="">
+    <style></style>
+  </head>
+  <body>
+    
+<div id="coolness" class="">
+<section class="nav">
+    <h1>Z-Dot LLC</h1>
+    <h3 class="span loader">
+      <span class="m">L</span>
+      <span class="m">E</span>
+      <span class="m">T</span>
+      <span class="m">'</span>
+      <span class="m">S</span>
+      <span class="m">&nbsp;</span>
+      <span class="m">B</span>
+      <span class="m">U</span>
+      <span class="m">I</span>
+      <span class="m">L</span>
+      <span class="m">D</span>
+      <span class="m">&nbsp;</span>
+      <span class="m">S</span>
+      <span class="m">O</span>
+      <span class="m">M</span>
+      <span class="m">E</span>
+      <span class="m">T</span>
+      <span class="m">H</span>
+      <span class="m">I</span>
+      <span class="m">N</span>
+      <span class="m">G</span>
+      <span class="m">&nbsp;</span>
+      <span class="m">C</span>
+      <span class="m">O</span>
+      <span class="m">O</span>
+      <span class="m">L</span>
+    </h3>
+    <div class="nav-container">
+      <a class="nav-tab" href="#tab-svelte">WEBSITES</a>
+      <a class="nav-tab" href="#tab-esbuild">APPS</a>
+      <a class="nav-tab" href="#tab-next">COMMERCIALS</a>
+      <a class="nav-tab" href="#tab-typescript">JINGLES</a>
+      <a class="nav-tab" href="#tab-vite">MORE</a>
+      <span class="nav-tab-slider"></span>
+    </div>
+</section>
+<main class="main">
+    <section class="slider" id="tab-svelte">
+        <h1>WEBSITES</h1>
+        <h2>Specializing in dynamic websites</h2>
+    </section>
+    <section class="slider" id="tab-esbuild">
+        <h1>APPS</h1>
+        <h2>Deploy your app in the cloud today</h2>
+    </section>
+    <section class="slider" id="tab-next">
+        <h1>COMMERCIALS</h1>
+        <h2>Equipped with 4k and drones</h2>
+    </section>
+    <section class="slider" id="tab-typescript">
+        <h1>JINGLES</h1>
+        <h2>Catchy tunes your customers will sing all day</h2>
+    </section>
+    <section class="slider" id="tab-vite">
+        <h1><a href="mailto:zdotconnect@gmail.com"type="button" class="btn btn-danger">Contact Us</a></h1>
+    </section>
+</main><canvas class="background"></canvas><!-- SGVsbG8hIE15IG5hbWUgaXMgU2FyYSBNYXphbC4gV2VsY29tZSB0byBteSBDb2RlUGVuIQ== -->
+<div>
+
+
+<!-- for coolness -->
+<script>
+  /* Credit and Thanks:
+Matrix - Particles.js;
+SliderJS - Ettrics;
+Design - Sara Mazal Web;
+Fonts - Google Fonts
+*/
+
+window.onload = function () {
+  Particles.init({
+    selector: ".background"
+  });
+};
+const particles = Particles.init({
+  selector: ".background",
+  color: ["#03dac6", "#ff0266", "#000000"],
+  connectParticles: true,
+  responsive: [
+    {
+      breakpoint: 768,
+      options: {
+        color: ["#faebd7", "#03dac6", "#ff0266"],
+        maxParticles: 43,
+        connectParticles: false
+      }
+    }
+  ]
+});
+
+class NavigationPage {
+  constructor() {
+    this.currentId = null;
+    this.currentTab = null;
+    this.tabContainerHeight = 70;
+    this.lastScroll = 0;
+    let self = this;
+    $(".nav-tab").click(function () {
+      self.onTabClick(event, $(this));
+    });
+    $(window).scroll(() => {
+      this.onScroll();
+    });
+    $(window).resize(() => {
+      this.onResize();
+    });
+  }
+
+  onTabClick(event, element) {
+    event.preventDefault();
+    let scrollTop =
+      $(element.attr("href")).offset().top - this.tabContainerHeight + 1;
+    $("html, body").animate({ scrollTop: scrollTop }, 600);
+  }
+
+  onScroll() {
+    this.checkHeaderPosition();
+    this.findCurrentTabSelector();
+    this.lastScroll = $(window).scrollTop();
+  }
+
+  onResize() {
+    if (this.currentId) {
+      this.setSliderCss();
+    }
+  }
+
+  checkHeaderPosition() {
+    const headerHeight = 75;
+    if ($(window).scrollTop() > headerHeight) {
+      $(".nav-container").addClass("nav-container--scrolled");
+    } else {
+      $(".nav-container").removeClass("nav-container--scrolled");
+    }
+    let offset =
+      $(".nav").offset().top +
+      $(".nav").height() -
+      this.tabContainerHeight -
+      headerHeight;
+    if (
+      $(window).scrollTop() > this.lastScroll &&
+      $(window).scrollTop() > offset
+    ) {
+      $(".nav-container").addClass("nav-container--move-up");
+      $(".nav-container").removeClass("nav-container--top-first");
+      $(".nav-container").addClass("nav-container--top-second");
+    } else if (
+      $(window).scrollTop() < this.lastScroll &&
+      $(window).scrollTop() > offset
+    ) {
+      $(".nav-container").removeClass("nav-container--move-up");
+      $(".nav-container").removeClass("nav-container--top-second");
+      $(".nav-container-container").addClass("nav-container--top-first");
+    } else {
+      $(".nav-container").removeClass("nav-container--move-up");
+      $(".nav-container").removeClass("nav-container--top-first");
+      $(".nav-container").removeClass("nav-container--top-second");
+    }
+  }
+
+  findCurrentTabSelector(element) {
+    let newCurrentId;
+    let newCurrentTab;
+    let self = this;
+    $(".nav-tab").each(function () {
+      let id = $(this).attr("href");
+      let offsetTop = $(id).offset().top - self.tabContainerHeight;
+      let offsetBottom =
+        $(id).offset().top + $(id).height() - self.tabContainerHeight;
+      if (
+        $(window).scrollTop() > offsetTop &&
+        $(window).scrollTop() < offsetBottom
+      ) {
+        newCurrentId = id;
+        newCurrentTab = $(this);
+      }
+    });
+    if (this.currentId != newCurrentId || this.currentId === null) {
+      this.currentId = newCurrentId;
+      this.currentTab = newCurrentTab;
+      this.setSliderCss();
+    }
+  }
+
+  setSliderCss() {
+    let width = 0;
+    let left = 0;
+    if (this.currentTab) {
+      width = this.currentTab.css("width");
+      left = this.currentTab.offset().left;
+    }
+    $(".nav-tab-slider").css("width", width);
+    $(".nav-tab-slider").css("left", left);
+  }
+}
+
+new NavigationPage();
+/* Credit and Thanks:
+Matrix - Particles.js;
+SliderJS - Ettrics;
+Design - Sara Mazal Web;
+Fonts - Google Fonts
+*/
+
+</script>
+<script>
+/* particlesJS.load(@dom-id, @path-json, @callback (optional)); */
+particlesJS.load('particles-js', 'assets/particles.json', function() {
+  console.log('callback - particles.js config loaded');
+
+    window.addEventListener('DOMContentLoaded', (event) => {
+  /* ---- particles.js config ---- */
+{
+  "particles": {
+    "number": {
+      "value": 80,
+      "density": {
+        "enable": true,
+        "value_area": 800
+      }
+    },
+    "color": {
+      "value": "#ffffff"
+    },
+    "shape": {
+      "type": "circle",
+      "stroke": {
+        "width": 0,
+        "color": "#000000"
+      },
+      "polygon": {
+        "nb_sides": 5
+      },
+      "image": {
+        "src": "img/github.svg",
+        "width": 100,
+        "height": 100
+      }
+    },
+    "opacity": {
+      "value": 0.5,
+      "random": false,
+      "anim": {
+        "enable": false,
+        "speed": 1,
+        "opacity_min": 0.1,
+        "sync": false
+      }
+    },
+    "size": {
+      "value": 10,
+      "random": true,
+      "anim": {
+        "enable": false,
+        "speed": 80,
+        "size_min": 0.1,
+        "sync": false
+      }
+    },
+    "line_linked": {
+      "enable": true,
+      "distance": 300,
+      "color": "#ffffff",
+      "opacity": 0.4,
+      "width": 2
+    },
+    "move": {
+      "enable": true,
+      "speed": 12,
+      "direction": "none",
+      "random": false,
+      "straight": false,
+      "out_mode": "out",
+      "bounce": false,
+      "attract": {
+        "enable": false,
+        "rotateX": 600,
+        "rotateY": 1200
+      }
+    }
+  },
+  "interactivity": {
+    "detect_on": "canvas",
+    "events": {
+      "onhover": {
+        "enable": false,
+        "mode": "repulse"
+      },
+      "onclick": {
+        "enable": true,
+        "mode": "push"
+      },
+      "resize": true
+    },
+    "modes": {
+      "grab": {
+        "distance": 800,
+        "line_linked": {
+          "opacity": 1
+        }
+      },
+      "bubble": {
+        "distance": 800,
+        "size": 80,
+        "duration": 2,
+        "opacity": 0.8,
+        "speed": 3
+      },
+      "repulse": {
+        "distance": 400,
+        "duration": 0.4
+      },
+      "push": {
+        "particles_nb": 4
+      },
+      "remove": {
+        "particles_nb": 2
+      }
+    }
+  },
+  "retina_detect": true
+});
+</script>
+
+
+<script>
+  window.addEventListener('DOMContentLoaded', (event) => {
+  /* ---- particles.js config ---- */
+{
+  "particles": {
+    "number": {
+      "value": 80,
+      "density": {
+        "enable": true,
+        "value_area": 800
+      }
+    },
+    "color": {
+      "value": "#ffffff"
+    },
+    "shape": {
+      "type": "circle",
+      "stroke": {
+        "width": 0,
+        "color": "#000000"
+      },
+      "polygon": {
+        "nb_sides": 5
+      },
+      "image": {
+        "src": "img/github.svg",
+        "width": 100,
+        "height": 100
+      }
+    },
+    "opacity": {
+      "value": 0.5,
+      "random": false,
+      "anim": {
+        "enable": false,
+        "speed": 1,
+        "opacity_min": 0.1,
+        "sync": false
+      }
+    },
+    "size": {
+      "value": 10,
+      "random": true,
+      "anim": {
+        "enable": false,
+        "speed": 80,
+        "size_min": 0.1,
+        "sync": false
+      }
+    },
+    "line_linked": {
+      "enable": true,
+      "distance": 300,
+      "color": "#ffffff",
+      "opacity": 0.4,
+      "width": 2
+    },
+    "move": {
+      "enable": true,
+      "speed": 12,
+      "direction": "none",
+      "random": false,
+      "straight": false,
+      "out_mode": "out",
+      "bounce": false,
+      "attract": {
+        "enable": false,
+        "rotateX": 600,
+        "rotateY": 1200
+      }
+    }
+  },
+  "interactivity": {
+    "detect_on": "canvas",
+    "events": {
+      "onhover": {
+        "enable": false,
+        "mode": "repulse"
+      },
+      "onclick": {
+        "enable": true,
+        "mode": "push"
+      },
+      "resize": true
+    },
+    "modes": {
+      "grab": {
+        "distance": 800,
+        "line_linked": {
+          "opacity": 1
+        }
+      },
+      "bubble": {
+        "distance": 800,
+        "size": 80,
+        "duration": 2,
+        "opacity": 0.8,
+        "speed": 3
+      },
+      "repulse": {
+        "distance": 400,
+        "duration": 0.4
+      },
+      "push": {
+        "particles_nb": 4
+      },
+      "remove": {
+        "particles_nb": 2
+      }
+    }
+  },
+  "retina_detect": true
+}
+
+});
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://www.npmjs.com/package/particles.js"></script>
+
+  </body>
+</html>

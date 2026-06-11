@@ -2,7 +2,6 @@
 const express = require('express');
 const session = require('express-session');
 const path = require('path');
-const multer = require('multer');
 const sqlite3 = require('sqlite3').verbose();
 const bcrypt = require('bcrypt');
 const fs = require('fs');
@@ -15,7 +14,6 @@ const db = new sqlite3.Database('./dropapp.db');
 
 // Create tables
 db.serialize(() => {
-  // Users table
   db.run(`CREATE TABLE IF NOT EXISTS users (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     username TEXT UNIQUE,
@@ -26,7 +24,6 @@ db.serialize(() => {
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
   )`);
   
-  // Apps table
   db.run(`CREATE TABLE IF NOT EXISTS apps (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     title TEXT,
@@ -39,7 +36,6 @@ db.serialize(() => {
     FOREIGN KEY(user_id) REFERENCES users(id)
   )`);
   
-  // Votes table
   db.run(`CREATE TABLE IF NOT EXISTS votes (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     user_id INTEGER,
@@ -50,7 +46,6 @@ db.serialize(() => {
     FOREIGN KEY(app_id) REFERENCES apps(id)
   )`);
   
-  // Comments table
   db.run(`CREATE TABLE IF NOT EXISTS comments (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     content TEXT,
@@ -61,7 +56,6 @@ db.serialize(() => {
     FOREIGN KEY(app_id) REFERENCES apps(id)
   )`);
   
-  // Follows table
   db.run(`CREATE TABLE IF NOT EXISTS follows (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     follower_id INTEGER,
@@ -71,7 +65,6 @@ db.serialize(() => {
     FOREIGN KEY(following_id) REFERENCES users(id)
   )`);
   
-  // Daily features table
   db.run(`CREATE TABLE IF NOT EXISTS daily_features (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     type TEXT,
@@ -91,26 +84,19 @@ app.use(session({
   cookie: { maxAge: 1000 * 60 * 60 * 24 }
 }));
 
-// Configure multer for folder uploads
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    const uploadDir = `public/uploads/${req.session.userId || 'temp'}`;
-    if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir, { recursive: true });
-    cb(null, uploadDir);
-  },
-  filename: (req, file, cb) => {
-    cb(null, file.originalname);
-  }
-});
-const upload = multer({ storage });
-
 // Set view engine
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
+// Ensure upload directories exist
+const uploadDirs = ['public/uploads', 'public/uploads/temp'];
+uploadDirs.forEach(dir => {
+  if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+});
+
 // Routes
 const authRoutes = require('./routes/auth')(db, bcrypt);
-const appRoutes = require('./routes/apps')(db, upload);
+const appRoutes = require('./routes/apps')(db);
 const userRoutes = require('./routes/users')(db);
 const socialRoutes = require('./routes/social')(db);
 
@@ -125,7 +111,7 @@ app.get('/', (req, res) => {
   db.get(`SELECT * FROM daily_features WHERE feature_date = ? AND type = 'app_of_day'`, [today], (err, appOfDay) => {
     db.get(`SELECT * FROM daily_features WHERE feature_date = ? AND type = 'dev_of_day'`, [today], (err, devOfDay) => {
       db.all(`SELECT apps.*, users.username, users.avatar, 
-              (SELECT COUNT(*) FROM votes WHERE votes.app_id = apps.id) as vote_count
+              (SELECT COALESCE(SUM(value), 0) FROM votes WHERE votes.app_id = apps.id) as vote_count
               FROM apps 
               JOIN users ON apps.user_id = users.id 
               ORDER BY apps.created_at DESC LIMIT 12`, (err, recentApps) => {
@@ -133,7 +119,7 @@ app.get('/', (req, res) => {
           user: req.session.user,
           appOfDay: appOfDay,
           devOfDay: devOfDay,
-          recentApps: recentApps
+          recentApps: recentApps || []
         });
       });
     });
